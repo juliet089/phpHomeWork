@@ -1,0 +1,30 @@
+RewriteEngine On
+
+# Защита от просмотра директорий
+Options -Indexes
+
+# Запрет доступа к чувствительным файлам
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Перенаправление на index.php для API
+RewriteRule ^api/?$ api.php [L,QSA]
+
+# Защита директории uploads
+<Directory "uploads/">
+    Order Allow,Deny
+    Deny from all
+</Directory>
+
+# Разрешить доступ только к изображениям в avatars
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Установка заголовков безопасности
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
